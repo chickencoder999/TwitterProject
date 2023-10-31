@@ -1,17 +1,21 @@
 import { Router } from 'express'
 import {
   emailVerifyTokenController,
+  forgotPasswordController,
   loginController,
   logoutController,
   registorController,
-  resendEmailVerifyController
+  resendEmailVerifyController,
+  verifyForgotPasswordTokenController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registorValidator
+  registorValidator,
+  verifyForgotPasswordTokenValidator
 } from '~/middlewares/users.middlewares'
 import { wrapAsync } from '~/utils/handlers'
 const usersRouter = Router()
@@ -56,6 +60,28 @@ headers : {authorization: Bearer <access_token>} // đăng nhập mới được
 body : {}
 */
 usersRouter.post('/resend-verify-email', accessTokenValidator, wrapAsync(resendEmailVerifyController))
+/*
+des : khi người dùng đăng nhập quên mật khẩu, họ gửi email để xin mình tạo cho họ forgot_password_token
+path:/users/forgot-password
+method : POST
+body :{email : string}
+*/
+usersRouter.post('/forgot-password', forgotPasswordValidator, wrapAsync(forgotPasswordController))
+
+/*
+des : khi nguời dùng nhấp vào link trong email để reset password
+họ sẽ gửi 1 req kèm theo forgot_password_token lên server 
+server sẽ kiểm tra forgot_password_token có hợp lệ ko
+sau đó chuyển hướng người dùng đến trang reset password
+path : /users/verify-reset-password
+method : POST
+body : {forgot_password_token}
+*/
+usersRouter.post(
+  '/verify-forgot-password',
+  verifyForgotPasswordTokenValidator,
+  wrapAsync(verifyForgotPasswordTokenController)
+)
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn
