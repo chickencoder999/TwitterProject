@@ -195,16 +195,24 @@ export const registorValidator = validate(
 )
 //check schema sẽ chắc tất cả các vùng của req nhưng nếu schema có thể nhận thêm object là các vùng nhớ cần check
 
+//chúng ta sẽ verify access token tiếp đến chúng ta sẽ refesh token
+//có nhiều mục đích của việc cần 2 token để đăng nhập lại
+
+//check accesstoken
 export const accessTokenValidator = validate(
   checkSchema(
     {
       Authorization: {
-        trim: true,
+        trim: true, //ko cho user truyền khoảng trắng
+        //bắt người dùng truyền vào
         notEmpty: {
           errorMessage: USERS_MESSAGES.ACCESS_TOKEN_IS_REQUIRED
         },
         custom: {
           options: async (value, { req }) => {
+            //khi truyền lên trong header sẽ có định dạng là
+            //bearer <token>
+            //nên ta cần split ra và cắt theo khoảng trắng và lấy phần tử số 1
             const access_token = value.split(' ')[1]
             if (!access_token) {
               throw new ErrorWithStatus({
@@ -216,6 +224,7 @@ export const accessTokenValidator = validate(
             //vần verify access_token và lấy payload(decoded_authorization) ra và lưu lại trong req
             try {
               const decoded_authorization = await verifyToken({ token: access_token })
+              //nếu ko có dấu ; ở đâu nó sẽ thành curryning mất RẤT NGUY HIỂM
               ;(req as Request).decoded_authorization = decoded_authorization
             } catch (err) {
               throw new ErrorWithStatus({
@@ -231,6 +240,8 @@ export const accessTokenValidator = validate(
     ['headers']
   )
 )
+
+//check refresh token
 export const refreshTokenValidator = validate(
   checkSchema(
     {

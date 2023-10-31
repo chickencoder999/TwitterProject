@@ -20,6 +20,8 @@ usersRouter.get('/login', loginValidator, wrapAsync(loginController)) //khi nào
 
 usersRouter.post('/register', registorValidator, wrapAsync(registorController))
 
+//logout là method post, nếu là method get thì sẽ là lấy cái gì đó thì phải truyền lên thành url
+//nhưng logout có trả về cái gì đâu nên xài method post
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapAsync(logoutController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
