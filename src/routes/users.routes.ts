@@ -1,7 +1,13 @@
 import { Router } from 'express'
-import { loginController, logoutController, registorController } from '~/controllers/users.controllers'
+import {
+  emailVerifyTokenController,
+  loginController,
+  logoutController,
+  registorController
+} from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
+  emailVerifyTokenValidator,
   loginValidator,
   refreshTokenValidator,
   registorValidator
@@ -23,6 +29,20 @@ usersRouter.post('/register', registorValidator, wrapAsync(registorController))
 //logout là method post, nếu là method get thì sẽ là lấy cái gì đó thì phải truyền lên thành url
 //nhưng logout có trả về cái gì đâu nên xài method post
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapAsync(logoutController))
+
+/*
+des : verify email token
+khi người dùng đăng ký thì họ sẽ nhận được mail có link dạng 
+localhost:3000/users/verify-email?email_verify_token=xxxx
+nếu mà em nhấp vào link thì sẽ tạo ra req gửi lên email_verify_token lên server 
+server kiểm tra email_verify_token có hợp lệ ko 
+thì từ cái decoded_email_verify_token lấy ra user_id 
+và vào user_id đó để update_email_verify_email_token thành '' và verify = 1, update at 
+path : /users/verify-email
+method : POST
+body: {email_verify_token}
+*/
+usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVerifyTokenController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn
