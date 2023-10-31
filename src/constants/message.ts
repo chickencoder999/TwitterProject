@@ -34,5 +34,8 @@ export const USERS_MESSAGES = {
   LOGOUT_SUCCESS: 'Logout success',
   USER_NOT_FOUND: 'User not found',
   EMAIL_IS_ALREADY_VERIFIED_BEFORE: 'Email is already verified before',
-  VERIFY_EMAIL_SUCCESS: 'verify email success'
+  VERIFY_EMAIL_SUCCESS: 'verify email success',
+  USER_IS_BANNED: 'User is banned',
+  RESEND_EMAIL_VERIFY_SUCCESS: 'Resend email verify success',
+  EMAIL_VERIFY_TOKEN_IS_INCORRECT: 'Email verify token is incorrect'
 } as const //để k ai chỉnh đc

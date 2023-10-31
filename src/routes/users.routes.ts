@@ -3,7 +3,8 @@ import {
   emailVerifyTokenController,
   loginController,
   logoutController,
-  registorController
+  registorController,
+  resendEmailVerifyController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
@@ -43,6 +44,18 @@ method : POST
 body: {email_verify_token}
 */
 usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapAsync(emailVerifyTokenController))
+
+/*
+des : resend email verify token
+khi mail thất lạc hoặc email_verify_token hết hạn, thì người dùng có 
+nhu cầu resend email_verify_token 
+
+method : post,
+path : /users/resend-verify-email
+headers : {authorization: Bearer <access_token>} // đăng nhập mới được resend
+body : {}
+*/
+usersRouter.post('/resend-verify-email', accessTokenValidator, wrapAsync(resendEmailVerifyController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn
