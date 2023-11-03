@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
   emailVerifyTokenController,
   forgotPasswordController,
+  getMeController,
   loginController,
   logoutController,
   registorController,
@@ -98,6 +99,14 @@ usersRouter.post(
   resetPasswordValidator,
   wrapAsync(resetPasswordController)
 )
+/*
+des : get profile của user 
+path : '/me'
+method : get 
+Header : Authorization : Bearer <access_token>
+body : {}
+*/
+usersRouter.get('/me', accessTokenValidator, wrapAsync(getMeController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn
