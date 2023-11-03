@@ -54,7 +54,7 @@ export const emailVerifyTokenController = async (
   //nếu mà code vào được đây thì email verify token đã hợp lệ
   //và mình đã lấy được decoded_email_verify_token(payload) từ req
   const { user_id } = req.decoded_email_verify_token as TokenPayload
-  //dựa vào user_id để tìm user và xem thử nó đã verify hcuaw
+  //dựa vào user_id để tìm user và xem thử nó đã verify chưa
   const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
   if (!user) {
     throw new ErrorWithStatus({
