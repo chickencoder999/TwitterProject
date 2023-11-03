@@ -3,23 +3,29 @@ import {
   emailVerifyTokenController,
   forgotPasswordController,
   getMeController,
+  getProfileController,
   loginController,
   logoutController,
-  registorController,
+  registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  updateMeController,
   verifyForgotPasswordTokenController
 } from '~/controllers/users.controllers'
+import { filterMiddleware } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registorValidator,
+  registerValidator,
   resetPasswordValidator,
+  updateMeValidator,
+  verifiedUserValidator,
   verifyForgotPasswordTokenValidator
 } from '~/middlewares/users.middlewares'
+import { UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapAsync } from '~/utils/handlers'
 const usersRouter = Router()
 // usersRouter.use(loginValidator)
@@ -32,7 +38,7 @@ body : {email, password}
 */
 usersRouter.get('/login', loginValidator, wrapAsync(loginController)) //khi nào như này thì sẽ có chỉ khi vào route login thì nó sẽ chạy middleware
 
-usersRouter.post('/register', registorValidator, wrapAsync(registorController))
+usersRouter.post('/register', registerValidator, wrapAsync(registerController))
 
 //logout là method post, nếu là method get thì sẽ là lấy cái gì đó thì phải truyền lên thành url
 //nhưng logout có trả về cái gì đâu nên xài method post
@@ -107,6 +113,33 @@ Header : Authorization : Bearer <access_token>
 body : {}
 */
 usersRouter.get('/me', accessTokenValidator, wrapAsync(getMeController))
+
+usersRouter.patch(
+  '/me',
+  accessTokenValidator,
+  verifiedUserValidator,
+  updateMeValidator,
+  filterMiddleware<UpdateMeReqBody>([
+    'name',
+    'date_of_birth',
+    'bio',
+    'location',
+    'website',
+    'username',
+    'avatar',
+    'cover_photo'
+  ]),
+  wrapAsync(updateMeController)
+)
+
+/*
+des: get profile của user khác bằng unsername
+path: '/:username'
+method: get
+không cần header vì, chưa đăng nhập cũng có thể xem
+*/
+usersRouter.get('/:username', wrapAsync(getProfileController))
+//chưa có controller getProfileController, nên bây giờ ta làm
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn
