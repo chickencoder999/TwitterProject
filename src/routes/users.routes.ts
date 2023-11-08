@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import {
+  changePasswordController,
   emailVerifyTokenController,
   followController,
   forgotPasswordController,
@@ -17,6 +18,7 @@ import {
 import { filterMiddleware } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
+  changePasswordValidator,
   emailVerifyTokenValidator,
   followValidator,
   forgotPasswordValidator,
@@ -177,6 +179,16 @@ usersRouter.delete(
   unfollowValidator,
   wrapAsync(unFollowController)
 )
+
+//change password
+/*
+des : change password
+path : /change-password
+method : put 
+headers : {Authorization : Bearer <access_token>}
+body : {old_password : string, new_password : string, new_confirm_password : string}
+*/
+usersRouter.put('/change-password', accessTokenValidator, changePasswordValidator, wrapAsync(changePasswordController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn

@@ -59,3 +59,9 @@ export interface UnfollowReqParams extends ParamsDictionary {
   user_id: string
 }
 //xài param và query nên extend từ cha nó
+
+export interface ChangePasswordReqBody {
+  old_password: string
+  password: string
+  confirm_password: string
+}

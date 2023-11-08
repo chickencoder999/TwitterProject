@@ -1,4 +1,5 @@
 import {
+  ChangePasswordReqBody,
   FollowReqBody,
   GetProfileReqParams,
   UnfollowReqParams,
@@ -210,5 +211,17 @@ export const unFollowController = async (req: Request<UnfollowReqParams>, res: R
   const { user_id: followed_user_id } = req.params
   //gọi hàm unfollow
   const result = await usersService.unFollow(user_id, followed_user_id)
+  return res.json(result)
+}
+
+export const changePasswordController = async (
+  req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
+  res: Response
+) => {
+  //muốn đổi mật khẩu thì cần user_id và password mới
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { password } = req.body
+  //cập nhật user
+  const result = await usersService.changePassword(user_id, password)
   return res.json(result)
 }

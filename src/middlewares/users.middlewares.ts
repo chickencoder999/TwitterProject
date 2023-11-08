@@ -587,3 +587,42 @@ export const unfollowValidator = validate(
     ['params']
   )
 )
+
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      old_password: {
+        ...passwordSchema,
+        custom: {
+          options: async (value, { req }) => {
+            //lấy user id từ payload của access token
+            const { user_id } = req.decoded_authorization as TokenPayload
+            //tìm xem user có tồn tại hay không
+            const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_NOT_FOUND,
+                status: HTTP_STATUS.NOT_FOUND
+              })
+            }
+            //nếu user tồn tại thì kiểm tra xem password cũ có đúng hay không
+            const { password } = user
+            if (password !== hashPassword(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.OLD_PASSWORD_IS_INCORRECT,
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
+            }
+
+            return true
+          }
+        }
+      },
+      password: passwordSchema,
+      confirm_password: confirmPasswordSchema
+      //lưu ý chỗ này nếu để là new_confirm_password thì nó sẽ bị bug tại trong confirmPasswordSchema
+      //chỉ lấy password từ body chứ ko lấy new_password từ body
+    },
+    ['body']
+  )
+)
