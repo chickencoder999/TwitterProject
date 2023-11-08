@@ -1,5 +1,5 @@
-import { GetProfileReqParams, UpdateMeReqBody } from './../models/requests/User.requests'
-import { Request, Response } from 'express'
+import { FollowReqBody, GetProfileReqParams, UpdateMeReqBody } from './../models/requests/User.requests'
+import { NextFunction, Request, Response } from 'express'
 import {
   LoginReqBody,
   LogoutReqBody,
@@ -190,4 +190,11 @@ export const getProfileController = async (req: Request<GetProfileReqParams>, re
     message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
     result: user
   })
+}
+
+export const followController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
+  const { user_id } = req.decoded_authorization as TokenPayload //lấy user_id từ decoded_authorization của access_token
+  const { followed_user_id } = req.body //lấy followed_user_id từ req.body
+  const result = await usersService.follow(user_id, followed_user_id) //chưa có method này
+  return res.json(result)
 }
