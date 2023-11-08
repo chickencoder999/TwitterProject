@@ -10,6 +10,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  unFollowController,
   updateMeController,
   verifyForgotPasswordTokenController
 } from '~/controllers/users.controllers'
@@ -23,6 +24,7 @@ import {
   refreshTokenValidator,
   registerValidator,
   resetPasswordValidator,
+  unfollowValidator,
   updateMeValidator,
   verifiedUserValidator,
   verifyForgotPasswordTokenValidator
@@ -149,13 +151,32 @@ method: post
 headers: {Authorization: Bearer <access_token>}
 body: {followed_user_id: string}
 */
-usersRouter.get('/follow', accessTokenValidator, verifiedUserValidator, followValidator, wrapAsync(followController))
+usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, followValidator, wrapAsync(followController))
 //accessTokenValidator dùng dể kiểm tra xem ngta có đăng nhập hay chưa, và có đc user_id của người dùng từ req.decoded_authorization
 //verifiedUserValidator dùng để kiễm tra xem ngta đã verify email hay chưa, rồi thì mới cho follow người khác
 //trong req.body có followed_user_id  là mã của người mà ngta muốn follow
 //followValidator: kiểm tra followed_user_id truyền lên có đúng định dạng objectId hay không
 //  account đó có tồn tại hay không
 //followController: tiến hành thao tác tạo document vào collection followers
+
+/*
+ * *654bc7e22b56df37b9a114c6 user 16
+ * * 654bc8692b56df37b9a114ca user 17
+ */
+
+/*
+  des : unfollow someone
+  path : /unfollow/:followed_user_id
+  method : delete
+  headers : {Authorization : Bearer <access_token>}
+*/
+usersRouter.delete(
+  '/unfollow/:user_id',
+  accessTokenValidator,
+  verifiedUserValidator,
+  unfollowValidator,
+  wrapAsync(unFollowController)
+)
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn

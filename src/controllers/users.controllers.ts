@@ -1,4 +1,9 @@
-import { FollowReqBody, GetProfileReqParams, UpdateMeReqBody } from './../models/requests/User.requests'
+import {
+  FollowReqBody,
+  GetProfileReqParams,
+  UnfollowReqParams,
+  UpdateMeReqBody
+} from './../models/requests/User.requests'
 import { NextFunction, Request, Response } from 'express'
 import {
   LoginReqBody,
@@ -196,5 +201,14 @@ export const followController = async (req: Request<ParamsDictionary, any, Follo
   const { user_id } = req.decoded_authorization as TokenPayload //lấy user_id từ decoded_authorization của access_token
   const { followed_user_id } = req.body //lấy followed_user_id từ req.body
   const result = await usersService.follow(user_id, followed_user_id) //chưa có method này
+  return res.json(result)
+}
+
+export const unFollowController = async (req: Request<UnfollowReqParams>, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_authorization as TokenPayload //lấy user_id từ decoded_authorization của access_token
+  //lấy ra người mà mình muốn unfollow
+  const { user_id: followed_user_id } = req.params
+  //gọi hàm unfollow
+  const result = await usersService.unFollow(user_id, followed_user_id)
   return res.json(result)
 }

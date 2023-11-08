@@ -274,6 +274,29 @@ class UserService {
       message: USERS_MESSAGES.FOLLOW_SUCCESS //trong message.ts thêm   FOLLOW_SUCCESS: 'Follow success'
     }
   }
+
+  async unFollow(user_id: string, followed_user_id: string) {
+    //kiểm tra xem mình đã follow hay chưa
+    const isFollowed = await databaseService.followers.findOne({
+      user_id: new ObjectId(user_id),
+      followed_user_id: new ObjectId(followed_user_id)
+    })
+    //check đã unfollow chưa
+    if (!isFollowed) {
+      return {
+        message: USERS_MESSAGES.AlREADY_UNFOLLOWED
+      }
+    }
+
+    await databaseService.followers.deleteOne({
+      user_id: new ObjectId(user_id),
+      followed_user_id: new ObjectId(followed_user_id)
+    })
+
+    return {
+      message: USERS_MESSAGES.UNFOLLOW_SUCCESS
+    }
+  }
 }
 const usersService = new UserService()
 export default usersService
