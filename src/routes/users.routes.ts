@@ -38,7 +38,7 @@ path : /users/login
 method : POST
 body : {email, password}
 */
-usersRouter.get('/login', loginValidator, wrapAsync(loginController)) //khi nào như này thì sẽ có chỉ khi vào route login thì nó sẽ chạy middleware
+usersRouter.post('/login', loginValidator, wrapAsync(loginController)) //khi nào như này thì sẽ có chỉ khi vào route login thì nó sẽ chạy middleware
 
 usersRouter.post('/register', registerValidator, wrapAsync(registerController))
 
