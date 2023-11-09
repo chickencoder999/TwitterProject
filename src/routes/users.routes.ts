@@ -8,6 +8,7 @@ import {
   getProfileController,
   loginController,
   logoutController,
+  refreshTokenController,
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
@@ -189,6 +190,14 @@ headers : {Authorization : Bearer <access_token>}
 body : {old_password : string, new_password : string, new_confirm_password : string}
 */
 usersRouter.put('/change-password', accessTokenValidator, changePasswordValidator, wrapAsync(changePasswordController))
+
+/*
+des : refresh token
+path : '/refresh-token'
+method : POST
+body : {refresh_token : string}
+*/
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapAsync(refreshTokenController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn

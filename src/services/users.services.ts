@@ -317,6 +317,25 @@ class UserService {
       message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS
     }
   }
+
+  async refreshToken({
+    refresh_token,
+    user_id,
+    verify
+  }: {
+    refresh_token: string
+    user_id: string
+    verify: UserVerifyStatus
+  }) {
+    //tạo ra access và refresh token mới
+    const [access_token, new_refresh_token] = await this.signAccessAndRefreshToken({ user_id, verify })
+    //xóa và cập nhật lại refresh token mới vào database
+    await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: new_refresh_token })
+    )
+    return { access_token, refresh_token: new_refresh_token }
+  }
 }
 const usersService = new UserService()
 export default usersService
