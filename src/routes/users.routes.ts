@@ -8,6 +8,7 @@ import {
   getProfileController,
   loginController,
   logoutController,
+  oAuthController,
   refreshTokenController,
   registerController,
   resendEmailVerifyController,
@@ -198,6 +199,7 @@ method : POST
 body : {refresh_token : string}
 */
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapAsync(refreshTokenController))
+usersRouter.get('/oauth/google', wrapAsync(oAuthController))
 export default usersRouter
 //status 500 là server chưa lường trước được luôn
 //thêm -T vào file nodemon thì nó sẽ ko đọc ts luôn và run luôn

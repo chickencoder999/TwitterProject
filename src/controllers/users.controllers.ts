@@ -24,6 +24,8 @@ import { ObjectId } from 'mongodb'
 import { USERS_MESSAGES } from '~/constants/message'
 import HTTP_STATUS from '~/constants/httpStatus'
 import { UserVerifyStatus } from '~/constants/enums'
+import { config } from 'dotenv'
+config() //để xài đc biến môi trường
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   // throw new ErrorWithStatus({
   //   message: 'test error',
@@ -239,4 +241,11 @@ export const refreshTokenController = async (
     message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESSFULLY,
     result
   })
+}
+
+export const oAuthController = async (req: Request, res: Response) => {
+  const { code } = req.query
+  const { access_token, refresh_token, new_user, verify } = await usersService.oAuth(code as string)
+  const url = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${access_token}&refresh_token=${refresh_token}&new_user=${new_user}&verify=${verify}`
+  return res.redirect(url)
 }
