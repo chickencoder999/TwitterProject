@@ -5,7 +5,7 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { config } from 'dotenv'
-import { UPLOAD_DIR } from './constants/dir'
+import { UPLOAD_IMAGE_DIR } from './constants/dir'
 config()
 const app = express()
 initFolder()
@@ -15,9 +15,9 @@ const PORT = process.env.PORT || 4000
 databaseService.connect()
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
-// app.use(express.static(UPLOAD_DIR)) //static file handler
+// app.use(express.static(UPLOAD_IMAGE_DIR)) //static file handler
 //nếu viết như vậy thì link dẫn sẽ là localhost:4000/blablabla.jpg
-app.use('/static', express.static(UPLOAD_DIR)) //nếu muốn thêm tiền tố, ta sẽ làm thế này
+app.use('/static', express.static(UPLOAD_IMAGE_DIR)) //nếu muốn thêm tiền tố, ta sẽ làm thế này
 //vậy thì nghĩa là vào localhost:4000/static/blablabla.jpg
 // Path: src/users.routes.ts
 app.get('/', (req, res) => {
