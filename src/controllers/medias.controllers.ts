@@ -6,8 +6,16 @@ import mediasService from '~/services/medias.services'
 import { handleUploadImage } from '~/utils/file'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 
-export const uploadSingleImageController = async (req: Request, res: Response) => {
+export const uploadImageController = async (req: Request, res: Response) => {
   const data = await mediasService.uploadImage(req)
+  return res.json({
+    message: USERS_MESSAGES.UPLOAD_SUCCESS,
+    result: data
+  })
+}
+
+export const uploadVideoController = async (req: Request, res: Response) => {
+  const data = await mediasService.uploadVideo(req)
   return res.json({
     message: USERS_MESSAGES.UPLOAD_SUCCESS,
     result: data

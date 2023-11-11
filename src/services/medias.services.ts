@@ -1,7 +1,7 @@
 import { Request } from 'express'
 import sharp from 'sharp'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
-import { getNameFromFullname, handleUploadImage } from '~/utils/file'
+import { getNameFromFullname, handleUploadImage, handleUploadVideo } from '~/utils/file'
 import fs from 'fs'
 import { isProduction } from '~/constants/config'
 import { MediaType } from '~/constants/enums'
@@ -28,6 +28,24 @@ class MediasService {
             ? `${process.env.HOST}/static/image/${newFilename}`
             : `http://localhost:${process.env.PORT}/static/image/${newFilename}`,
           type: MediaType.Image
+        }
+      })
+    )
+    return result
+  }
+
+  async uploadVideo(req: Request) {
+    //lưu video vào trong uploads/video
+    const files = await handleUploadVideo(req) //handleUploadImage giờ trả ra mảng các file
+
+    const result: Media[] = await Promise.all(
+      files.map(async (file) => {
+        const { newFilename } = file
+        return {
+          url: isProduction
+            ? `${process.env.HOST}/static/video/${newFilename}`
+            : `http://localhost:${process.env.PORT}/static/image/${newFilename}`,
+          type: MediaType.Video
         }
       })
     )
