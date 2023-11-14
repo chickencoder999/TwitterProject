@@ -5,30 +5,35 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { config } from 'dotenv'
-import { UPLOAD_IMAGE_DIR } from './constants/dir'
+import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from './constants/dir'
+import staticRouter from './routes/static.routes'
+import { MongoClient } from 'mongodb'
 config()
 const app = express()
 initFolder()
 app.use(express.json())
 const PORT = process.env.PORT || 4000
 
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+})
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 // app.use(express.static(UPLOAD_IMAGE_DIR)) //static file handler
+// app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 //nếu viết như vậy thì link dẫn sẽ là localhost:4000/blablabla.jpg
-app.use('/static', express.static(UPLOAD_IMAGE_DIR)) //nếu muốn thêm tiền tố, ta sẽ làm thế này
+app.use('/static', staticRouter) //nếu muốn thêm tiền tố, ta sẽ làm thế này
 //vậy thì nghĩa là vào localhost:4000/static/blablabla.jpg
 // Path: src/users.routes.ts
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World')
+// })
 
 app.use(defaultErrorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
-  console.log(process.argv)
+  // console.log(process.argv)
 })
 
 //chúng ta đang dùng mô hình mvc

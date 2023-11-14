@@ -6,6 +6,8 @@ import fs from 'fs'
 import { isProduction } from '~/constants/config'
 import { MediaType } from '~/constants/enums'
 import { Media } from '~/models/Other'
+import { config } from 'dotenv'
+config()
 class MediasService {
   async uploadImage(req: Request) {
     const files = await handleUploadImage(req) //handleUploadImage giờ trả ra mảng các file
@@ -35,22 +37,39 @@ class MediasService {
   }
 
   async uploadVideo(req: Request) {
-    //lưu video vào trong uploads/video
-    const files = await handleUploadVideo(req) //handleUploadImage giờ trả ra mảng các file
+    const files = await handleUploadVideo(req)
 
     const result: Media[] = await Promise.all(
-      files.map(async (file) => {
-        const { newFilename } = file
+      files.map(async (video) => {
+        const { newFilename } = video
         return {
           url: isProduction
-            ? `${process.env.HOST}/static/video/${newFilename}`
-            : `http://localhost:${process.env.PORT}/static/image/${newFilename}`,
+            ? `${process.env.HOST}/static/video-stream/${newFilename}`
+            : `http://localhost:${process.env.PORT}/static/video-stream/${newFilename}`,
           type: MediaType.Video
         }
       })
     )
     return result
   }
+
+  // async uploadVideo(req: Request) {
+  //   //lưu video vào trong uploads/video
+  //   const files = await handleUploadVideo(req) //handleUploadImage giờ trả ra mảng các file
+
+  //   const result: Media[] = await Promise.all(
+  //     files.map(async (file) => {
+  //       const { newFilename } = file
+  //       return {
+  //         url: isProduction
+  //           ? `${process.env.HOST}/static/video/${newFilename}`
+  //           : `http://localhost:${process.env.PORT}/static/video/${newFilename}`,
+  //         type: MediaType.Video
+  //       }
+  //     })
+  //   )
+  //   return result
+  // }
 }
 
 const mediasService = new MediasService()
