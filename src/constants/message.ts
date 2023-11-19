@@ -20,7 +20,8 @@ export const USERS_MESSAGES = {
   CONFIRM_PASSWORD_LENGTH_MUST_BE_FROM_8_TO_50: 'Confirm length must be from 8 to 50',
   CONFIRM_PASSWORD_MUST_BE_STRONG:
     'Confirm password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol',
-  CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD: 'Confirm password must be the same as password',
+  CONFIRM_PASSWORD_MUST_BE_THE_SAME_AS_PASSWORD:
+    'Confirm password must be the same as password',
   //dateOfBirth
   DATE_OF_BIRTH_BE_ISO8601: 'Date of birth must be ISO8601',
   //user
@@ -71,3 +72,17 @@ export const USERS_MESSAGES = {
   EMAIL_NOT_VERIFIED: 'Email not verified',
   UPLOAD_SUCCESS: 'Upload success'
 } as const //để k ai chỉnh đc
+
+export const TWEETS_MESSAGES = {
+  INVALID_TYPE: 'Invalid type',
+  INVALID_AUDIENCE: 'Invalid audience',
+  PARENT_ID_MUST_BE_A_VALID_TWEET_ID: 'Parent id must be a valid tweet id',
+  PARENT_ID_MUST_BE_NULL: 'Parent id must be null',
+  CONTENT_MUST_BE_NULL: 'Content must be null',
+  CONTENT_MUST_BE_A_NON_EMPTY_STRING: 'Content must be a non-empty string',
+  HASHTAGS_MUST_BE_AN_ARRAY_OF_STRING: 'Hashtags must be an array of string',
+  MENTIONS_MUST_BE_AN_ARRAY_OF_user_id: 'Mentions must be an array of user id',
+  MEDIAS_MUST_BE_AN_ARRAY_OF_MEDIA_OBJECT: 'Medias must be an array of media object',
+  CONTENT_MUST_BE_EMPTY_STRING: 'Content must be empty string',
+  CREATE_TWEET_SUCCESSFULLY: 'Create tweet successfully'
+} as const

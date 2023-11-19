@@ -3,6 +3,7 @@ import { config } from 'dotenv'
 import User from '../models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.Schema'
 import { Follower } from '~/models/schemas/Follow.Schema'
+import Tweet from '~/models/schemas/Tweet.Schema'
 config() // là để đọc file .env
 
 //chúng ta cần mã hóa password với username của database
@@ -32,6 +33,8 @@ class DatabaseService {
   }
 
   async indexUsers() {
+    const isExisted = await this.users.indexExists(['username_1', 'email_1_password_1'])
+    if (isExisted) return
     await this.users.createIndex({ email: 1 }, { unique: true }) //register
     await this.users.createIndex({ username: 1 }, { unique: true }) //getProfile
     await this.users.createIndex({ email: 1, password: 1 }) //login
@@ -41,8 +44,25 @@ class DatabaseService {
     return this.db.collection(process.env.DB_REFRESH_TOKENS_COLLECTION as string)
   }
 
+  async indexRefreshTokens() {
+    const isExisted = await this.refreshTokens.indexExists(['token_1', 'exp_1'])
+    if (isExisted) return
+    await this.refreshTokens.createIndex({ token: 1 }) //bản chất là ko cần await vì khi nào chúng ta cần hứng kết quả thì mới nên await
+    await this.refreshTokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
+  }
+
   get followers(): Collection<Follower> {
     return this.db.collection(process.env.DB_FOLLOWERS_COLLECTION as string)
+  }
+
+  async indexFollowers() {
+    const isExisted = await this.followers.indexExists(['user_id_1_f ollowed_user_id_1'])
+    if (isExisted) return
+    await this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection(process.env.DB_TWEETS_COLLECTION as string)
   }
 }
 
