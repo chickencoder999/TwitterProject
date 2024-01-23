@@ -1,8 +1,9 @@
-#My personal NodeJs and Typescript Tweet Project
-------
-##Create under the mentor of Lê Điệp
-##My Class PIED tới đây
+# My personal NodeJs and Typescript Tweet Project
+----------
+## Create under the mentor of Lê Điệp
+## My Class PIED tới đây
 
+----------
 I'm very grateful for having you as mentor in my life
 
 under studying
