@@ -1,6 +1,6 @@
 # My personal NodeJs and Typescript Tweet Project
 ----------
-## Create under the mentor of Lê Điệp
+## Create under the mentor of [Lê Điệp](https://www.facebook.com/nomadic.lodestar)
 ## My Class PIED tới đây
 
 ----------
